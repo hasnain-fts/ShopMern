@@ -39,6 +39,7 @@ import animateduser from "../assets/system-regular-8-account-hover-pinch.gif";
 import { labRoutes } from "@/routes/Lab.routes";
 import { NavLink, useLocation } from "react-router-dom";
 import { problemRoutes } from "@/routes/Problems.routes";
+import { ImplementationRoutes } from "@/routes/Implementation.routes";
 
 const data = {
   user: {
@@ -233,6 +234,34 @@ export function AppSidebar({ ...props }) {
                         }}
                       >
                         <NavLink to={"/Logic-&-Reasoning" + item.path}>
+                          {item.title}
+                        </NavLink>
+                      </SidebarMenuSubButton>
+                    </SidebarMenuSubItem>
+                  );
+                })}
+              </SidebarMenuSub>
+            </SidebarMenuItem>
+
+            <SidebarMenuItem key={"Implementation Guides"}>
+              <SidebarMenuButton asChild>
+                <NavLink to={"#"}>Implementation Guides</NavLink>
+              </SidebarMenuButton>
+              <SidebarMenuSub>
+                {ImplementationRoutes.map((item) => {
+                  return (
+                    <SidebarMenuSubItem key={item.title}>
+                      <SidebarMenuSubButton
+                        asChild
+                        isActive={
+                          item.path ===
+                          location.pathname.replace("/ImplementationGuide", "")
+                        }
+                        onClick={() => {
+                          console.log("clicked");
+                        }}
+                      >
+                        <NavLink to={"/ImplementationGuide" + item.path}>
                           {item.title}
                         </NavLink>
                       </SidebarMenuSubButton>

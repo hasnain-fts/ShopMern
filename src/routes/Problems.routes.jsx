@@ -7,6 +7,10 @@ const CardValueMinimization = lazy(() =>
   import("@/components/Problems/CardValueMinimization/CardValueMinimization")
 );
 
+const MaxMinDifference = lazy(() =>
+  import("@/components/Problems/MaxMinDifference/MaxMinDifference")
+);
+
 export const problemRoutes = [
   {
     path: "/minimum-bottle-change",
@@ -65,7 +69,6 @@ Your task is to determine:
 Because <strong>7 + 7 = 14</strong> and no solution uses fewer bottles.
 </p>
 `,
-    codeSnippet: ``,
   },
   {
     path: "/card-value-minimization",
@@ -166,6 +169,21 @@ The maximum value in this array is <strong>1</strong>.
   <li>−10<sup>9</sup> ≤ values_on_cards[i] ≤ 10<sup>9</sup></li>
 </ul>
 `,
-    codeSnippet: ``,
+  },
+  {
+    path: "/Max-Min-Difference",
+    title: "Max Min Difference",
+    showInMenu: true,
+    hocProblemLayout: true,
+    component: <MaxMinDifference />,
+    ProblemQuestion: `<h2>🌡️ Maximum Temperature Variation Problem</h2> 
+    <p> You are working as a warehouse manager. 
+    Your warehouse records the **daily temperature readings** over several days in order to monitor storage conditions. </p> 
+    <p> There are <strong>N</strong> days of recorded temperatures, given as integer values in a row from day <strong>0</strong> to day <strong>N - 1</strong>. </p> 
+    <p> Management wants to know the **maximum possible temperature variation** during this period. </p> <p> Your task is to find the difference between the **highest and lowest temperatures** recorded. 
+    </p> 
+    <h3>Example</h3> 
+    <p><strong>Input:</strong></p> <pre> temperatures = 4, 9, 2, 7, 5 <br/> no_of_days = 5 </pre> <p><strong>Output:</strong></p> <pre> 11 </pre> <p> <strong>Explanation:</strong><br /> The highest temperature is <strong>9</strong> and the lowest temperature is <strong>2</strong>.<br /> The difference is <strong>9 - (2) = 7</strong>. </p> <h3>Constraints</h3> <ul> <li>1 ≤ N ≤ 10<sup>5</sup></li> <li>−10<sup>9</sup> ≤ temperatures[i] ≤ 10<sup>9</sup></li> </ul>
+`,
   },
 ];
