@@ -3,17 +3,17 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 dotenv.config({ path: '../.env' });
 const cores = require('cors');
+const productRoutes = require('./routes/productRoutes');
+const app = express();
 
 dotenv.config();
 
-const app = express();
 
 app.use(express.json());
 app.use(cores());
 
 //Routes
 
-const productRoutes = require('./routes/productRoutes');
 app.use('/api/products',productRoutes); 
 
 //Connect to MongoDB

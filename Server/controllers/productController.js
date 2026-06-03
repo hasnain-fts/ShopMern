@@ -27,7 +27,8 @@ const singleProduct = async  (req,res) => {
 
 const createProduct = async (req,res) => {
     try {
-        const {name,price,category,stock,imageURL} = req.body;
+        const {name,price,category,stock} = req.body;
+        const imageURL = req.files ? req.files.map(file => file.path) : [];
         const newProduct = new Product ({name,price,category,stock,imageURL});
         const savedProduct = await newProduct.save();
         res.status(201).json(savedProduct);
@@ -35,7 +36,6 @@ const createProduct = async (req,res) => {
         res.status(400).json({ message : error.message})
     }
 }
-
 //Put apis
 const updateProduct = async (req,res) => {
     try{
@@ -47,7 +47,8 @@ const updateProduct = async (req,res) => {
         product.price = req.body.price || product.price;
         product.category = req.body.category || product.category;
         product.stock = req.body.stock || product.stock;
-        product.imageURL = req.body.imageURL || product.imageURL;
+        // product.imageURL = req.body.imageURL || product.imageURL;
+        product.imageURL = req.file.lenght > 0 ? req.file.map(file => file.path) : product.imageURL;
         const savedProduct = await product.save();
         res.status(200).json({message : savedProduct})
     }catch(error) {
@@ -70,10 +71,5 @@ const deleted_product = async (req,res) => {
         res.status(400).json({message : error.message })
     }
 }
-
-
-
-
-
 
 module.exports = {getProducts,singleProduct,createProduct,updateProduct,deleted_product};

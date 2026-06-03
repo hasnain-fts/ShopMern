@@ -5,8 +5,8 @@ const {getProducts,singleProduct,createProduct,updateProduct,deleted_product} = 
 router.get('/',getProducts);
 router.get('/:id',singleProduct);
 //For admin level
-router.post('/admin/create',isAdmin,createProduct);
-router.put('/admin/update/:id',isAdmin,updateProduct);
-router.delete('/admin/delete/:id',isAdmin,deleted_product);
+router.post('/admin/create',upload.array('images'),createProduct);
+router.put('/admin/update/:id',upload.array('images'),updateProduct);
+router.delete('/admin/delete/:id',deleted_product);
 
 module.exports = router;
