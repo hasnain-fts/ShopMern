@@ -29,7 +29,7 @@ const createProduct = async (req,res) => {
     try {
         const {name,price,category,stock} = req.body;
         const imageURL = req.files ? req.files.map(file => file.path) : [];
-        const newProduct = new Product ({name,price,category,stock,imageURL});
+        const newProduct = new Product ({name,price,category,stock,gender,category,imageURL});
         const savedProduct = await newProduct.save();
         res.status(201).json(savedProduct);
     }catch(error){
@@ -47,6 +47,8 @@ const updateProduct = async (req,res) => {
         product.price = req.body.price || product.price;
         product.category = req.body.category || product.category;
         product.stock = req.body.stock || product.stock;
+        product.gender = req.body.gender || product.gender;
+        product.category = req.body.category || product.category;
         // product.imageURL = req.body.imageURL || product.imageURL;
         product.imageURL = req.file.lenght > 0 ? req.file.map(file => file.path) : product.imageURL;
         const savedProduct = await product.save();

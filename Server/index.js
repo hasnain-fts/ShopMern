@@ -5,7 +5,7 @@ dotenv.config({ path: '../.env' });
 const cores = require('cors');
 const productRoutes = require('./routes/productRoutes');
 const app = express();
-
+const userRoutes = require('./routes/UserRoutes'); 
 dotenv.config();
 
 
@@ -15,7 +15,7 @@ app.use(cores());
 //Routes
 
 app.use('/api/products',productRoutes); 
-
+app.use('/api/users',userRoutes)
 //Connect to MongoDB
 
 mongoose.connect(process.env.MONGO_URI)

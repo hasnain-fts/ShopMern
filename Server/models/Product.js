@@ -17,10 +17,23 @@ const productSchema = new mongoose.Schema({
         type : Number , 
         required : true
     },
+
+    gender : {
+        type:String , 
+        required:true,
+        enum : ['male', 'femail' , 'kids' , 'unisex']
+    },
+    category : {
+        type:String ,
+        required : true ,
+        enum : ['shirts' , 'pants' , 'watches' , 'shoes' , 'accessories']
+
+    },
     imageURL : {
         type : String , 
         default :''
-    }
+    },
+    
 },{ timestamps : true});
 
 const Product = mongoose.model('Product',productSchema);

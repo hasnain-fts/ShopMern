@@ -1,16 +1,31 @@
-# React + Vite
+# React Performance Labs
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A comprehensive guide to improving React application performance with hands-on labs.
 
-Currently, two official plugins are available:
+## Overview
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+This project contains practical labs demonstrating various techniques to optimize React code performance in frontend applications. Each lab focuses on specific performance challenges and solutions.
 
-## React Compiler
+## Labs
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- [Lab 1: Big List Rendering](./src/components/Labs/lab_01_big_lists/Readme.md)
 
-## Expanding the ESLint configuration
+## Lab 1: Big List Rendering
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Learn optimization techniques for rendering large lists (10,000+ elements) using virtualization and memoization strategies.
+
+[View Lab 1](./src/components/Labs/lab_01_big_lists/Readme.md)
+
+## Getting Started
+
+```bash
+npm install
+npm run dev
+```
+
+## Resources
+
+- [React Documentation](https://react.dev)
+- [Web Vitals](https://web.dev/vitals/)
+- [shadcn/ui](https://shadcn-ui.com)
+- [TanStack](https://tanstack.com)
