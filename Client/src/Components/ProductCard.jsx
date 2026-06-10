@@ -6,39 +6,59 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import { useNavigate } from "react-router-dom";
 
-export function ProductCard({ name, price, category, stock, imageURL }) {
+export function ProductCard({ _id, name, price, category, stock, imageURL }) {
+  const navigate = useNavigate();
+
   return (
     <Card className="relative mx-auto w-full max-w-sm pt-0">
       
-      {/* Image */}
+      {/* Clickable Image */}
       <img
         src={imageURL || "https://avatar.vercel.sh/shadcn1"}
         alt={name}
-        className="aspect-video w-full object-cover rounded-t-xl"
+        onClick={() => navigate(`/product/${_id}`)}
+        className="aspect-video w-full object-cover rounded-t-xl cursor-pointer hover:opacity-90 transition-opacity"
       />
 
       <CardHeader>
-        {/* Category Badge */}
-        <Badge variant="secondary" className="w-fit">
+        {/* Category Badge - not clickable usually, but added cursor-default */}
+        <Badge variant="secondary" className="w-fit cursor-default">
           {category}
         </Badge>
 
-        {/* Name */}
-        <CardTitle className="text-lg">{name}</CardTitle>
+        {/* Name as clickable link */}
+        <CardTitle 
+          onClick={() => navigate(`/product/${_id}`)}
+          className="text-lg cursor-pointer hover:text-gray-600 transition-colors hover:underline"
+        >
+          {name}
+        </CardTitle>
 
-        {/* Price */}
-        <p className="text-xl font-bold text-green-600">${price}</p>
+        {/* Price - not clickable */}
+        <p className="text-xl font-bold text-green-600 cursor-default">
+          ${price}
+        </p>
 
-        {/* Stock */}
-        <p className={`text-sm ${stock > 0 ? "text-gray-500" : "text-red-500"}`}>
+        {/* Stock - not clickable */}
+        <p className={`text-sm cursor-default ${stock > 0 ? "text-gray-500" : "text-red-500"}`}>
           {stock > 0 ? `${stock} in stock` : "Out of stock"}
         </p>
       </CardHeader>
 
       <CardFooter>
-        <Button className="w-full" disabled={stock === 0}>
-          {stock > 0 ? "Add to Card" : "Out of Stock"}
+        <Button 
+          className="w-full cursor-pointer" 
+          disabled={stock === 0}
+          onClick={() => {
+            if (stock > 0) {
+              // Add to cart logic here
+              console.log("Added to cart:", name);
+            }
+          }}
+        >
+          {stock > 0 ? "Add to Cart" : "Out of Stock"}
         </Button>
       </CardFooter>
 

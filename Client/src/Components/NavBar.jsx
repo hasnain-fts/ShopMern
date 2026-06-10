@@ -34,17 +34,15 @@ export default function Navbar() {
           <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between gap-4">
 
             {/* Logo */}
-            <div className="text-2xl font-bold tracking-widest text-black uppercase">
-              ShopMern
+            <div className="text-3xl font-bold tracking-widest text-black uppercase">
+              <a href="/">SHOPMERN</a>
             </div>
 
             {/* Nav Links */}
             <div className="hidden md:flex items-center gap-8 text-xs font-medium text-black tracking-widest uppercase">
-              <a href="/" className="hover:text-gray-400 transition-colors">Woman</a>
-              <a href="/man" className="hover:text-gray-400 transition-colors">Man</a>
-              <a href="/shoes" className="hover:text-gray-400 transition-colors">Shoes</a>
-              <a href="/accessories" className="hover:text-gray-400 transition-colors">Accessories</a>
-              <a href="/clearance" className="hover:text-gray-400 transition-colors">Clearance</a>
+              <a href="/women" className="hover:text-gray-400 transition-colors">Woman</a>
+              <a href="/men" className="hover:text-gray-400 transition-colors">Men</a>
+              <a href="/kids" className="hover:text-gray-400 transition-colors">Kids</a>
             </div>
 
             {/* Right Icons */}

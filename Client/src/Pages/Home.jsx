@@ -3,108 +3,151 @@ import Footer from "../Components/Footer";
 import { ProductCard } from "../components/ProductCard";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ShoppingBag, ArrowRight, Star } from "lucide-react";
+import { ArrowRight, Search } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-
-const products = [
-  { _id: "1", name: "Classic White Shirt", price: 29.99, category: "Shirts", stock: 10, imageURL: "https://images.unsplash.com/photo-1598033129183-c4f50c736f10?w=400" },
-  { _id: "2", name: "Slim Fit Jeans", price: 49.99, category: "Pants", stock: 5, imageURL: "https://images.unsplash.com/photo-1542272604-787c3835535d?w=400" },
-  { _id: "3", name: "Running Sneakers", price: 79.99, category: "Shoes", stock: 8, imageURL: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400" },
-  { _id: "4", name: "Leather Jacket", price: 129.99, category: "Jackets", stock: 3, imageURL: "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=400" },
-  { _id: "5", name: "Floral Summer Dress", price: 39.99, category: "Dresses", stock: 0, imageURL: "https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?w=400" },
-  { _id: "6", name: "Polo Shirt", price: 24.99, category: "Shirts", stock: 15, imageURL: "https://images.unsplash.com/photo-1586363104862-3a5e2ab60d99?w=400" },
-  { _id: "7", name: "Ankle Boots", price: 89.99, category: "Shoes", stock: 0, imageURL: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=400" },
-  { _id: "8", name: "Wool Sweater", price: 59.99, category: "Sweaters", stock: 7, imageURL: "https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=400" },
-];
-
-const stats = [
-  { value: "18K+", label: "Happy Customers" },
-  { value: "700+", label: "Products Available" },
-  { value: "95%", label: "Satisfaction Rate" },
-];
+import { useEffect, useState } from "react";
 
 const categories = [
-  { name: "All", active: true },
-  { name: "Shirts" },
-  { name: "Pants" },
-  { name: "Shoes" },
-  { name: "Jackets" },
-  { name: "Accessories" },
+  { name: "All" },
+  { name: "shirts" },
+  { name: "pants" },
+  { name: "shoes" },
+  { name: "watches" },
+  { name: "accessories" },
 ];
 
 function Home() {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
+  const [products, setProducts] = useState([]);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [filteredProducts, setFilteredProducts] = useState([]);
 
-function viewAllproducts () {
-    navigate("/allproducts")
-}
+  useEffect(() => {
+    async function getProducts() {
+      try {
+        const response = await fetch("http://localhost:5000/api/products");
+        const data = await response.json();
+        setProducts(data);
+        setFilteredProducts(data);
+      } catch (error) {
+        console.log("Failed to load products");
+      }
+    }
+    getProducts();
+  }, []);
+
+  // Filter products when category or search changes
+  useEffect(() => {
+    let result = products;
+
+    if (selectedCategory !== "All") {
+      result = result.filter((p) => p.category === selectedCategory);
+    }
+
+    if (searchQuery.trim() !== "") {
+      result = result.filter((p) =>
+        p.name.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+
+    setFilteredProducts(result);
+  }, [selectedCategory, searchQuery, products]);
+
   return (
     <>
       <NavBar />
 
-      
       {/* ── Hero Section ── */}
-<section className="relative w-full h-screen overflow-hidden">
-  
-  {/* Background Image */}
-  <img
-    src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=1600"
-    alt="Hero"
-    className="w-full h-full object-cover"
-  />
-
-  {/* Overlay */}
-  <div className="absolute inset-0 bg-black/20" />
-
-  {/* Text Content — centered bottom */}
-  <div className="absolute inset-0 flex flex-col items-center justify-end pb-24 text-white text-center px-4">
-    
-    <p className="text-xs uppercase tracking-[0.4em] mb-3 font-light">
-      Select Pieces Up To 40 Percent
-    </p>
-
-    <h1 className="text-6xl md:text-8xl font-bold uppercase tracking-widest mb-8">
-      Summer Sale
-    </h1>
-
-    {/* Two CTA Links */}
-    <div className="flex items-center gap-10">
-      <a
-        href="/woman"
-        className="text-xs uppercase tracking-[0.3em] font-medium border-b border-white pb-0.5 hover:text-gray-300 hover:border-gray-300 transition-colors"
-      >
-        Shop Woman
-      </a>
-      <a
-        href="/man"
-        className="text-xs uppercase tracking-[0.3em] font-medium border-b border-white pb-0.5 hover:text-gray-300 hover:border-gray-300 transition-colors"
-      >
-        Shop Man
-      </a>
-    </div>
-
-  </div>
-</section>
+      <section className="relative w-full h-screen overflow-hidden">
+        <img
+          src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=1600"
+          alt="Hero"
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-black/20" />
+        <div className="absolute inset-0 flex flex-col items-center justify-end pb-24 text-white text-center px-4">
+          <p className="text-xs uppercase tracking-[0.4em] mb-3 font-light">
+            Select Pieces Up To 40 Percent
+          </p>
+          <h1 className="text-6xl md:text-8xl font-bold uppercase tracking-widest mb-8">
+            Summer Sale
+          </h1>
+          <div className="flex items-center gap-10">
+            <a
+              href="/women"
+              className="text-xs uppercase tracking-[0.3em] font-medium border-b border-white pb-0.5 hover:text-gray-300 hover:border-gray-300 transition-colors cursor-pointer"
+            >
+              Shop Woman
+            </a>
+            <a
+              href="/men"
+              className="text-xs uppercase tracking-[0.3em] font-medium border-b border-white pb-0.5 hover:text-gray-300 hover:border-gray-300 transition-colors cursor-pointer"
+            >
+              Shop Man
+            </a>
+          </div>
+        </div>
+      </section>
 
       {/* ── Categories Filter ── */}
       <section className="max-w-7xl mx-auto px-6 py-10">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <p className="text-xs text-gray-400 uppercase tracking-widest mb-1">Explore</p>
             <h2 className="text-2xl font-bold">Our Best Quality Products</h2>
           </div>
-          <Button variant="outline" className="gap-2 text-sm" onClick={viewAllproducts}>
-            View All <ArrowRight size={14} />
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="text-black hover:text-gray-400 hover:bg-gray-100 cursor-pointer"
+              onClick={() => setSearchOpen(!searchOpen)}
+            >
+              <Search size={18} />
+            </Button>
+            <Button
+              variant="outline"
+              className="gap-2 text-sm cursor-pointer"
+              onClick={() => navigate("/allproducts")}
+            >
+              View All <ArrowRight size={14} />
+            </Button>
+          </div>
         </div>
 
+        {/* Search Bar */}
+        {searchOpen && (
+          <div className="border border-gray-200 rounded-lg px-4 py-3 mb-6 flex items-center gap-2">
+            <Search size={16} className="text-gray-400" />
+            <input
+              autoFocus
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search products..."
+              className="w-full outline-none text-sm text-black placeholder-gray-400 bg-transparent"
+            />
+            <button
+              onClick={() => {
+                setSearchOpen(false);
+                setSearchQuery("");
+              }}
+              className="text-xs text-gray-400 hover:text-black uppercase tracking-widest cursor-pointer"
+            >
+              Close
+            </button>
+          </div>
+        )}
+
         {/* Category Tabs */}
-        <div className="flex items-center gap-3 mb-8 flex-wrap">
+        <div className="flex items-center justify-center gap-3 mb-8 flex-wrap">
           {categories.map((cat, i) => (
             <button
               key={i}
-              className={`px-4 py-1.5 rounded-full text-sm font-medium border transition-all ${
-                cat.active
+              onClick={() => setSelectedCategory(cat.name)}
+              className={`px-4 py-1.5 rounded-full text-sm font-medium border transition-all capitalize cursor-pointer ${
+                selectedCategory === cat.name
                   ? "bg-black text-white border-black"
                   : "bg-white text-gray-600 border-gray-200 hover:border-black hover:text-black"
               }`}
@@ -116,7 +159,7 @@ function viewAllproducts () {
 
         {/* Products Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {products.map((product) => (
+          {filteredProducts.slice(0, 8).map((product) => (
             <ProductCard
               key={product._id}
               name={product.name}
@@ -127,6 +170,15 @@ function viewAllproducts () {
             />
           ))}
         </div>
+
+        {/* Empty State */}
+        {filteredProducts.length === 0 && (
+          <div className="text-center py-10">
+            <p className="text-gray-400 uppercase tracking-widest text-sm">
+              No products found in "{selectedCategory}"
+            </p>
+          </div>
+        )}
       </section>
 
       {/* ── Banner Section ── */}
@@ -137,14 +189,16 @@ function viewAllproducts () {
           className="w-full h-72 object-cover brightness-50"
         />
         <div className="absolute inset-0 flex flex-col items-center justify-center text-white text-center px-4">
-          <p className="text-sm uppercase tracking-widest mb-2 text-gray-300">Limited Time Offer</p>
+          <p className="text-sm uppercase tracking-widest mb-2 text-gray-300">
+            Limited Time Offer
+          </p>
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
             End of Season Sale
           </h2>
           <p className="text-gray-300 mb-6 max-w-md">
             Up to 50% off on selected items. Don't miss out on the biggest sale of the year.
           </p>
-          <Button className="bg-white text-black hover:bg-gray-200 px-8 py-5 font-semibold">
+          <Button className="bg-white text-black hover:bg-gray-200 px-8 py-5 font-semibold cursor-pointer">
             Shop the Sale
           </Button>
         </div>
@@ -166,7 +220,7 @@ function viewAllproducts () {
               placeholder="Enter your email address..."
               className="flex-1 bg-gray-900 border border-gray-700 rounded-lg px-4 py-3 text-sm text-white placeholder-gray-500 outline-none focus:border-gray-500"
             />
-            <Button className="bg-white text-black hover:bg-gray-200 px-6 py-3 font-semibold whitespace-nowrap">
+            <Button className="bg-white text-black hover:bg-gray-200 px-6 py-3 font-semibold whitespace-nowrap cursor-pointer">
               Subscribe
             </Button>
           </div>

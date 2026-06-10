@@ -1,32 +1,17 @@
 import NavBar from "../Components/NavBar";
 import Footer from "../Components/Footer";
 import { ProductCard } from "../components/ProductCard";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { X, ChevronDown } from "lucide-react";
 
-const products = [
-  { _id: "1", name: "Classic White Shirt", price: 29.99, category: "Woman", stock: 10, imageURL: "https://images.unsplash.com/photo-1598033129183-c4f50c736f10?w=400" },
-  { _id: "2", name: "Slim Fit Jeans", price: 49.99, category: "Man", stock: 5, imageURL: "https://images.unsplash.com/photo-1542272604-787c3835535d?w=400" },
-  { _id: "3", name: "Running Sneakers", price: 79.99, category: "Kids", stock: 8, imageURL: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400" },
-  { _id: "4", name: "Leather Jacket", price: 129.99, category: "Man", stock: 3, imageURL: "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=400" },
-  { _id: "5", name: "Floral Summer Dress", price: 39.99, category: "Woman", stock: 0, imageURL: "https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?w=400" },
-  { _id: "6", name: "Polo Shirt", price: 24.99, category: "Man", stock: 15, imageURL: "https://images.unsplash.com/photo-1586363104862-3a5e2ab60d99?w=400" },
-  { _id: "7", name: "Ankle Boots", price: 89.99, category: "Woman", stock: 0, imageURL: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=400" },
-  { _id: "8", name: "Wool Sweater", price: 59.99, category: "Kids", stock: 7, imageURL: "https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=400" },
-  { _id: "9", name: "Cargo Shorts", price: 34.99, category: "Man", stock: 12, imageURL: "https://images.unsplash.com/photo-1591195853828-11db59a44f43?w=400" },
-  { _id: "10", name: "Baseball Cap", price: 19.99, category: "Kids", stock: 20, imageURL: "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=400" },
-  { _id: "11", name: "Maxi Dress", price: 44.99, category: "Woman", stock: 6, imageURL: "https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=400" },
-  { _id: "12", name: "Kids Hoodie", price: 19.99, category: "Kids", stock: 14, imageURL: "https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?w=400" },
-];
-
 const filterSections = [
-  { label: "Gender",               options: ["Woman", "Man", "Kids"] },
-  { label: "Discount",             options: ["10% Off", "20% Off", "30% Off", "40% Off"] },
+  { label: "Gender", options: ["Woman", "Man", "Kids"] },
+  { label: "Discount", options: ["10% Off", "20% Off", "30% Off", "40% Off"] },
   { label: "Product Availability", options: ["In Stock", "Out of Stock"] },
-  { label: "Product Type",         options: ["Shirts", "Pants", "Shoes", "Jackets", "Accessories"] },
-  { label: "Price",                options: ["Under $30", "$30 - $60", "$60 - $100", "Above $100"] },
-  { label: "Size",                 options: ["XS", "S", "M", "L", "XL", "XXL"] },
-  { label: "Color",                options: ["Black", "White", "Brown", "Blue", "Red"] },
+  { label: "Product Type", options: ["Shirts", "Pants", "Shoes", "Jackets", "Accessories"] },
+  { label: "Price", options: ["Under $30", "$30 - $60", "$60 - $100", "Above $100"] },
+  { label: "Size", options: ["XS", "S", "M", "L", "XL", "XXL"] },
+  { label: "Color", options: ["Black", "White", "Brown", "Blue", "Red"] },
 ];
 
 // Collapsible filter section
@@ -66,6 +51,24 @@ function FilterSection({ label, options }) {
 
 function Products() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function getItems() {
+      try {
+        const response = await fetch("http://localhost:5000/api/products");
+        const data = await response.json();
+        console.log(data);
+        setProducts(data);
+      } catch (error) {
+        console.log("Error occurred:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    getItems();
+  }, []);
 
   return (
     <>
@@ -117,8 +120,7 @@ function Products() {
         <div className="fixed inset-0 z-50 flex">
           
           {/* Sidebar */}
-          {/* <div className="w-80 bg-white h-full overflow-y-auto px-6 py-6 shadow-xl"> */}
-            <div className="w-80 bg-white h-full overflow-y-auto px-6 py-6 shadow-xl animate-in slide-in-from-left duration-300">
+          <div className="w-80 bg-white h-full overflow-y-auto px-6 py-6 shadow-xl animate-in slide-in-from-left duration-300">
             {/* Sidebar Header */}
             <div className="flex items-center justify-between mb-4">
               <span className="text-xl font-bold uppercase tracking-widest">Filter</span>
@@ -160,18 +162,24 @@ function Products() {
 
       {/* ── Products Grid ── */}
       <div className="max-w-7xl mx-auto px-6 py-10">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {products.map((product) => (
-            <ProductCard
-              key={product._id}
-              name={product.name}
-              price={product.price}
-              category={product.category}
-              stock={product.stock}
-              imageURL={product.imageURL}
-            />
-          ))}
-        </div>
+        {loading ? (
+          <div className="text-center py-20">
+            <p className="text-gray-400 uppercase tracking-widest">Loading products...</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {products.map((product) => (
+              <ProductCard
+                key={product._id}
+                name={product.name}
+                price={product.price}
+                category={product.category}
+                stock={product.stock}
+                imageURL={product.imageURL}
+              />
+            ))}
+          </div>
+        )}
       </div>
 
       <Footer />
