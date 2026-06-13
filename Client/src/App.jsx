@@ -9,9 +9,11 @@ import Women from "./Pages/Women";
 import Men from "./Pages/Men";
 import Kids from "./Pages/Kids";
 import ProductPage from "./Pages/ProductPage";
+import { CartProvider } from './Context/CartContext';
 
 function App() {
   return (
+    <CartProvider>
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
@@ -22,9 +24,10 @@ function App() {
         <Route path="/men" element={<Men/>}/>
         <Route path="/women" element={<Women/>}/>
         <Route path="/kids" element={<Kids/>}/>
-        <Route path="/productpage" element={<ProductPage/>}/>
+        <Route path="/product/:id" element={<ProductPage/>}/>
       </Routes>
     </BrowserRouter>
+    </CartProvider>
   );
 }
 

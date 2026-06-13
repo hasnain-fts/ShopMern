@@ -1,0 +1,52 @@
+const mongoose = require('mongoose');
+
+const cartItemSchema = new mongoose.Schema({
+    productId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Product',
+        required: true
+    },
+    name: {
+        type: String,
+        required: true
+    },
+    price: {
+        type: Number,
+        required: true
+    },
+    imageURL: {
+        type: String,  // just store the first image
+        default: ''
+    },
+    quantity: {
+        type: Number,
+        required: true,
+        min: 1,
+        default: 1
+    }
+});
+
+const cartSchema = new mongoose.Schema({
+    userId: {
+        type:String,
+        ref: 'User',
+        required: true,
+        unique: true   // one cart per user
+    },
+    items: [cartItemSchema],
+    totalAmount: {
+        type: Number,
+        default: 0
+    }
+}, { timestamps: true });
+
+// Auto calculate total before saving
+cartSchema.pre('save', function () {
+    this.totalAmount = this.items.reduce(
+        (total, item) => total + item.price * item.quantity, 0
+    );
+});
+
+const Cart = mongoose.model('Cart', cartSchema);
+
+module.exports = Cart;

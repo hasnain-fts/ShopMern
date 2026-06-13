@@ -1,5 +1,6 @@
 import { Facebook, Instagram, Twitter, Youtube, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 export default function Footer() {
   return (
@@ -11,22 +12,23 @@ export default function Footer() {
 
           {/* Brand */}
           <div className="flex flex-col gap-4">
-            <h2 className="text-2xl font-bold tracking-tight">ShopMern</h2>
+            <Link to="/" className="text-2xl font-bold tracking-tight hover:text-gray-300 transition-colors">
+              ShopMern
+            </Link>
             <p className="text-gray-400 text-sm leading-relaxed">
               Your one-stop destination for the latest fashion trends. Quality clothing delivered to your door.
             </p>
-            {/* Social Icons */}
             <div className="flex items-center gap-3 mt-2">
-              <a href="#" className="text-gray-400 hover:text-white transition-colors">
+              <a href="https://facebook.com" target="_blank" rel="noreferrer" className="text-gray-400 hover:text-white transition-colors">
                 <Facebook size={20} />
               </a>
-              <a href="#" className="text-gray-400 hover:text-white transition-colors">
+              <a href="https://instagram.com" target="_blank" rel="noreferrer" className="text-gray-400 hover:text-white transition-colors">
                 <Instagram size={20} />
               </a>
-              <a href="#" className="text-gray-400 hover:text-white transition-colors">
+              <a href="https://twitter.com" target="_blank" rel="noreferrer" className="text-gray-400 hover:text-white transition-colors">
                 <Twitter size={20} />
               </a>
-              <a href="#" className="text-gray-400 hover:text-white transition-colors">
+              <a href="https://youtube.com" target="_blank" rel="noreferrer" className="text-gray-400 hover:text-white transition-colors">
                 <Youtube size={20} />
               </a>
             </div>
@@ -37,11 +39,11 @@ export default function Footer() {
             <h3 className="text-sm font-semibold uppercase tracking-widest text-gray-300">
               Quick Links
             </h3>
-            <a href="/" className="text-gray-400 hover:text-white text-sm transition-colors">Home</a>
-            <a href="/products" className="text-gray-400 hover:text-white text-sm transition-colors">Products</a>
-            <a href="/categories" className="text-gray-400 hover:text-white text-sm transition-colors">Categories</a>
-            <a href="/about" className="text-gray-400 hover:text-white text-sm transition-colors">About Us</a>
-            <a href="/contact" className="text-gray-400 hover:text-white text-sm transition-colors">Contact</a>
+            <Link to="/" className="text-gray-400 hover:text-white text-sm transition-colors">Home</Link>
+            <Link to="/allproducts" className="text-gray-400 hover:text-white text-sm transition-colors">Products</Link>
+            <Link to="/login" className="text-gray-400 hover:text-white text-sm transition-colors">Login</Link>
+            <Link to="/register" className="text-gray-400 hover:text-white text-sm transition-colors">Register</Link>
+            <Link to="/checkout" className="text-gray-400 hover:text-white text-sm transition-colors">Checkout</Link>
           </div>
 
           {/* Categories */}
@@ -49,11 +51,10 @@ export default function Footer() {
             <h3 className="text-sm font-semibold uppercase tracking-widest text-gray-300">
               Categories
             </h3>
-            <a href="#" className="text-gray-400 hover:text-white text-sm transition-colors">Shirts</a>
-            <a href="#" className="text-gray-400 hover:text-white text-sm transition-colors">Pants</a>
-            <a href="#" className="text-gray-400 hover:text-white text-sm transition-colors">Shoes</a>
-            <a href="#" className="text-gray-400 hover:text-white text-sm transition-colors">Jackets</a>
-            <a href="#" className="text-gray-400 hover:text-white text-sm transition-colors">Accessories</a>
+            <Link to="/men" className="text-gray-400 hover:text-white text-sm transition-colors">Men</Link>
+            <Link to="/women" className="text-gray-400 hover:text-white text-sm transition-colors">Women</Link>
+            <Link to="/kids" className="text-gray-400 hover:text-white text-sm transition-colors">Kids</Link>
+            <Link to="/allproducts" className="text-gray-400 hover:text-white text-sm transition-colors">All Products</Link>
           </div>
 
           {/* Newsletter */}
@@ -85,9 +86,9 @@ export default function Footer() {
             © 2026 ShopMern. All rights reserved.
           </p>
           <div className="flex items-center gap-6 text-sm text-gray-500">
-            <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
-            <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
-            <a href="#" className="hover:text-white transition-colors">Refund Policy</a>
+            <Link to="/allproducts" className="hover:text-white transition-colors">Privacy Policy</Link>
+            <Link to="/allproducts" className="hover:text-white transition-colors">Terms of Service</Link>
+            <Link to="/allproducts" className="hover:text-white transition-colors">Refund Policy</Link>
           </div>
         </div>
 

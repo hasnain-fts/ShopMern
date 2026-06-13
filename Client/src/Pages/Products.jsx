@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { X, ChevronDown } from "lucide-react";
 
 const filterSections = [
-  { label: "Gender", options: ["Woman", "Man", "Kids"] },
+  { label: "Gender", options: ["women", "men", "Kids"] },
   { label: "Discount", options: ["10% Off", "20% Off", "30% Off", "40% Off"] },
   { label: "Product Availability", options: ["In Stock", "Out of Stock"] },
   { label: "Product Type", options: ["Shirts", "Pants", "Shoes", "Jackets", "Accessories"] },
@@ -14,8 +14,7 @@ const filterSections = [
   { label: "Color", options: ["Black", "White", "Brown", "Blue", "Red"] },
 ];
 
-// Collapsible filter section
-function FilterSection({ label, options }) {
+function FilterSection({ label, options, selected, onToggle }) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -36,6 +35,8 @@ function FilterSection({ label, options }) {
             <label key={opt} className="flex items-center gap-2 cursor-pointer group">
               <input
                 type="checkbox"
+                checked={selected?.includes(opt) || false}
+                onChange={() => onToggle(label, opt)}
                 className="w-3.5 h-3.5 accent-black cursor-pointer"
               />
               <span className="text-xs text-gray-600 group-hover:text-black transition-colors">
@@ -53,6 +54,7 @@ function Products() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedFilters, setSelectedFilters] = useState({});
 
   useEffect(() => {
     async function getItems() {
@@ -70,6 +72,62 @@ function Products() {
     getItems();
   }, []);
 
+  function handleToggleFilter(category, option) {
+    setSelectedFilters((prev) => {
+      const current = prev[category] || [];
+      const updated = current.includes(option)
+        ? current.filter((o) => o !== option)
+        : [...current, option];
+      return { ...prev, [category]: updated };
+    });
+  }
+
+  function clearAllFilters() {
+    setSelectedFilters({});
+  }
+
+  const activeFilterCount = Object.values(selectedFilters).flat().length;
+
+  const filteredProducts = products.filter((product) => {
+
+    // Gender
+    const genders = selectedFilters["Gender"] || [];
+    if (genders.length && !genders.some(g => product.gender?.toLowerCase() === g.toLowerCase())) return false;
+
+    // Product Type
+    const types = selectedFilters["Product Type"] || [];
+    if (types.length && !types.some(t => product.category?.toLowerCase() === t.toLowerCase())) return false;
+
+    // Availability
+    const avail = selectedFilters["Product Availability"] || [];
+    if (avail.includes("In Stock") && !avail.includes("Out of Stock") && product.stock <= 0) return false;
+    if (avail.includes("Out of Stock") && !avail.includes("In Stock") && product.stock > 0) return false;
+
+    // Price
+    const prices = selectedFilters["Price"] || [];
+    if (prices.length) {
+      const p = product.price;
+      const match = prices.some((range) => {
+        if (range === "Under $30") return p < 30;
+        if (range === "$30 - $60") return p >= 30 && p <= 60;
+        if (range === "$60 - $100") return p >= 60 && p <= 100;
+        if (range === "Above $100") return p > 100;
+        return false;
+      });
+      if (!match) return false;
+    }
+
+    // Color
+    const colors = selectedFilters["Color"] || [];
+    if (colors.length && !colors.some(c => product.color?.toLowerCase() === c.toLowerCase())) return false;
+
+    // Size
+    const sizes = selectedFilters["Size"] || [];
+    if (sizes.length && !sizes.some(s => product.sizes?.includes(s) || product.size?.toLowerCase() === s.toLowerCase())) return false;
+
+    return true;
+  });
+
   return (
     <>
       <NavBar />
@@ -86,7 +144,7 @@ function Products() {
 
       {/* ── Toolbar ── */}
       <div className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between border-b border-gray-200">
-        
+
         {/* Filter Button */}
         <button
           onClick={() => setSidebarOpen(true)}
@@ -98,12 +156,17 @@ function Products() {
             <line x1="12" y1="18" x2="20" y2="18" />
           </svg>
           Filter
+          {activeFilterCount > 0 && (
+            <span className="bg-black text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center">
+              {activeFilterCount}
+            </span>
+          )}
         </button>
 
         {/* Product Count + Sort */}
         <div className="flex items-center gap-4">
           <span className="text-xs text-gray-400 uppercase tracking-widest">
-            {products.length} Products
+            {filteredProducts.length} Products
           </span>
           <select className="text-xs uppercase tracking-widest border border-gray-200 px-3 py-2 outline-none bg-white">
             <option>Featured</option>
@@ -115,10 +178,34 @@ function Products() {
 
       </div>
 
+      {/* ── Active Filter Tags ── */}
+      {activeFilterCount > 0 && (
+        <div className="max-w-7xl mx-auto px-6 py-3 flex flex-wrap gap-2 items-center">
+          {Object.entries(selectedFilters).map(([category, options]) =>
+            options.map((opt) => (
+              <button
+                key={`${category}-${opt}`}
+                onClick={() => handleToggleFilter(category, opt)}
+                className="flex items-center gap-1 border border-gray-300 px-3 py-1 text-xs uppercase tracking-widest hover:bg-gray-100 transition-colors"
+              >
+                {opt}
+                <X size={10} />
+              </button>
+            ))
+          )}
+          <button
+            onClick={clearAllFilters}
+            className="text-xs uppercase tracking-widest text-gray-400 hover:text-black underline ml-2 transition-colors"
+          >
+            Clear All
+          </button>
+        </div>
+      )}
+
       {/* ── Filter Sidebar Overlay ── */}
       {sidebarOpen && (
         <div className="fixed inset-0 z-50 flex">
-          
+
           {/* Sidebar */}
           <div className="w-80 bg-white h-full overflow-y-auto px-6 py-6 shadow-xl animate-in slide-in-from-left duration-300">
             {/* Sidebar Header */}
@@ -132,12 +219,24 @@ function Products() {
               </button>
             </div>
 
+            {/* Clear All inside sidebar */}
+            {activeFilterCount > 0 && (
+              <button
+                onClick={clearAllFilters}
+                className="text-xs uppercase tracking-widest text-gray-400 hover:text-black underline mb-4 transition-colors"
+              >
+                Clear All ({activeFilterCount})
+              </button>
+            )}
+
             {/* Filter Sections */}
             {filterSections.map((section) => (
               <FilterSection
                 key={section.label}
                 label={section.label}
                 options={section.options}
+                selected={selectedFilters[section.label] || []}
+                onToggle={handleToggleFilter}
               />
             ))}
 
@@ -166,9 +265,19 @@ function Products() {
           <div className="text-center py-20">
             <p className="text-gray-400 uppercase tracking-widest">Loading products...</p>
           </div>
+        ) : filteredProducts.length === 0 ? (
+          <div className="text-center py-20">
+            <p className="text-gray-400 uppercase tracking-widest">No products match your filters.</p>
+            <button
+              onClick={clearAllFilters}
+              className="mt-4 text-xs uppercase tracking-widest underline hover:text-gray-400 transition-colors"
+            >
+              Clear Filters
+            </button>
+          </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {products.map((product) => (
+            {filteredProducts.map((product) => (
               <ProductCard
                 key={product._id}
                 name={product.name}
