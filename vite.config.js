@@ -21,5 +21,5 @@ export default defineConfig({
     host: true, // ← allows access via IP address
     port: 5179, // optional: choose your port
   },
-  base: "/react-performance-lab/",
+  base: "/",
 });
