@@ -595,7 +595,7 @@ const products = [
             "https://pk.lamaretail.com/cdn/shop/files/WAS26BT183-BEIGE-GARDEN-KALEIDOSCOPE-PANTS-7c5d41_14_720x.jpg?v=1781093965"
         ]
     },
-        // ==================== ACCESSORIES PRODUCTS ====================
+    // ==================== ACCESSORIES PRODUCTS ====================
     // Product 43: Nice Actually Perfume
     {
         name: "NICE, ACTUALLY",
@@ -850,7 +850,8 @@ const products = [
             "https://pk.lamaretail.com/cdn/shop/files/MCW25HG001-RED-VARSITY-COTTON-CAP-9c1d32_2.jpg?v=1762888517&width=1000",
             "https://pk.lamaretail.com/cdn/shop/files/MCW25HG001-RED-VARSITY-COTTON-CAP-9c1d32_1_720x.jpg?v=1762888517"
         ]
-    },    // ==================== KIDS PRODUCTS (Boys - Minnie Minors) ====================
+    },
+    // ==================== KIDS PRODUCTS (Boys - Minnie Minors) ====================
     // Product 62: Polo T-Shirt Yellow
     {
         name: "POLO T-SHIRT",
@@ -1130,7 +1131,61 @@ const products = [
             "https://www.minnieminors.com/cdn/shop/files/MSB-HOODZ-05_2.jpg?v=1762510685&width=1728",
             "https://www.minnieminors.com/cdn/shop/files/MSB-HOODZ-05_3.jpg?v=1762510685&width=1728"
         ]
-    }
+    },
+    // ==================== WATCHES ====================
+    {
+        "name": "Civian",
+        "description": "Mens stainless steel",
+        "price": 15000,
+        "gender": "men",
+        "category": "watches",
+        "stock": 8,
+        "imageURL": [
+          "https://cdn.shopify.com/s/files/1/0003/58",
+          "https://cdn.shopify.com/s/files/1/0003/5815/4293/"
+        ]
+    },
+    {
+        "name": "Lotus",
+        "description": "Mens leather",
+        "price": 18450,
+        "gender": "men",
+        "category": "watches",
+        "stock": 6,
+        "imageURL": [
+            "https://cdn.shopify.com/s/files/1/0003/5815/4293/files/SV-11292_Cam002_M17.png?v=1773122392&width=60&height=60&crop=center",
+            "https://pk.lamaretail.com/cdn/shop/files/chronograph-blue-watch-3_720x.jpg?v=1234567895"
+        ]
+    },
+    {
+    "name": "DAWN 1.0",
+    "description": "Women's stainless steel watch with elegant design. Features a stunning chain bracelet and minimalist dial. Available in silver black, rose gold, and black colors.",
+    "price": 9999,
+    "gender": "women",
+    "category": "watches",
+    "stock": 15,
+    "imageURL": [
+        "https://cdn.shopify.com/s/files/1/0003/5815/4293/files/SV-19037_Dawn_3.0_Chain_Cam001_F2.png?v=1777984798",
+        "https://cdn.shopify.com/s/files/1/0003/5815/4293/files/SV-19037_Dawn_3.0_Chain_Cam001_F1.png?v=1777984799",
+        "https://cdn.shopify.com/s/files/1/0003/5815/4293/files/SV-19037_Dawn_3.0_Chain_Cam001_F3.png?v=1777984797"
+    ]
+},
+{
+    "name": "SCHUYLER",
+    "description": "Women's stainless steel 36mm watch. Features stunning stone accents and elegant design. Available in black stone, black, silver black, silver-black stone, rose-gold green stone, and silver green variants.",
+    "price": 9999,
+    "gender": "women",
+    "category": "watches",
+    "stock": 20,
+    "imageURL": [
+        "https://cdn.shopify.com/s/files/1/0003/5815/4293/files/hf_20260609_043704_37d0e35d-2386-4d3f-a715-b82bcfcf2f1b.png?v=1780981608",
+        "https://cdn.shopify.com/s/files/1/0003/5815/4293/files/SV-19031_11.0_Chain_Cam001_F8.png?v=1776536874",
+        "https://cdn.shopify.com/s/files/1/0003/5815/4293/files/SV-19031_10.0_Chain_Cam001_F34.png?v=1776536874",
+        "https://cdn.shopify.com/s/files/1/0003/5815/4293/files/SV-19031_10.0_Chain_Cam002_F10.png?v=1776536874",
+        "https://cdn.shopify.com/s/files/1/0003/5815/4293/files/SV-19031_11.0_Chain_Cam001_F12.png?v=1776536874"
+    ]
+}
+
 ];
 
 mongoose.connect(process.env.MONGO_URI)
@@ -1143,6 +1198,8 @@ mongoose.connect(process.env.MONGO_URI)
         console.log('Products include:');
         console.log(`- Men: ${products.filter(p => p.gender === 'men').length} products`);
         console.log(`- Women: ${products.filter(p => p.gender === 'women').length} products`);
+        console.log(`- Unisex: ${products.filter(p => p.gender === 'unisex').length} products`);
+        console.log(`- Kids: ${products.filter(p => p.gender === 'kids').length} products`);
         process.exit();
     })
     .catch((error) => {

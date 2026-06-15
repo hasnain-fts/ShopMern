@@ -5,13 +5,10 @@ import { useState, useEffect } from "react";
 import { X, ChevronDown } from "lucide-react";
 
 const filterSections = [
-  { label: "Gender", options: ["women", "men", "Kids"] },
-  { label: "Discount", options: ["10% Off", "20% Off", "30% Off", "40% Off"] },
+  { label: "Gender", options: ["men", "women", "kids", "unisex"] },
+  { label: "Product Type", options: ["shirts", "pants", "watches", "shoes", "accessories"] },
   { label: "Product Availability", options: ["In Stock", "Out of Stock"] },
-  { label: "Product Type", options: ["Shirts", "Pants", "Shoes", "Jackets", "Accessories"] },
-  { label: "Price", options: ["Under $30", "$30 - $60", "$60 - $100", "Above $100"] },
-  { label: "Size", options: ["XS", "S", "M", "L", "XL", "XXL"] },
-  { label: "Color", options: ["Black", "White", "Brown", "Blue", "Red"] },
+  { label: "Price", options: ["Under ₨500", "₨500 - ₨2000", "₨2000 - ₨5000", "Above ₨5000"] },
 ];
 
 function FilterSection({ label, options, selected, onToggle }) {
@@ -39,7 +36,7 @@ function FilterSection({ label, options, selected, onToggle }) {
                 onChange={() => onToggle(label, opt)}
                 className="w-3.5 h-3.5 accent-black cursor-pointer"
               />
-              <span className="text-xs text-gray-600 group-hover:text-black transition-colors">
+              <span className="text-xs text-gray-600 group-hover:text-black transition-colors capitalize">
                 {opt}
               </span>
             </label>
@@ -61,7 +58,6 @@ function Products() {
       try {
         const response = await fetch("http://localhost:5000/api/products");
         const data = await response.json();
-        console.log(data);
         setProducts(data);
       } catch (error) {
         console.log("Error occurred:", error);
@@ -90,40 +86,32 @@ function Products() {
 
   const filteredProducts = products.filter((product) => {
 
-    // Gender
+    // Gender — schema enum: men, women, kids, unisex
     const genders = selectedFilters["Gender"] || [];
-    if (genders.length && !genders.some(g => product.gender?.toLowerCase() === g.toLowerCase())) return false;
+    if (genders.length && !genders.includes(product.gender?.toLowerCase())) return false;
 
-    // Product Type
+    // Product Type — schema enum: shirts, pants, watches, shoes, accessories
     const types = selectedFilters["Product Type"] || [];
-    if (types.length && !types.some(t => product.category?.toLowerCase() === t.toLowerCase())) return false;
+    if (types.length && !types.includes(product.category?.toLowerCase())) return false;
 
-    // Availability
+    // Availability — based on stock field
     const avail = selectedFilters["Product Availability"] || [];
     if (avail.includes("In Stock") && !avail.includes("Out of Stock") && product.stock <= 0) return false;
     if (avail.includes("Out of Stock") && !avail.includes("In Stock") && product.stock > 0) return false;
 
-    // Price
+    // Price — based on price field
     const prices = selectedFilters["Price"] || [];
     if (prices.length) {
       const p = product.price;
       const match = prices.some((range) => {
-        if (range === "Under $30") return p < 30;
-        if (range === "$30 - $60") return p >= 30 && p <= 60;
-        if (range === "$60 - $100") return p >= 60 && p <= 100;
-        if (range === "Above $100") return p > 100;
+        if (range === "Under ₨500") return p < 500;
+        if (range === "₨500 - ₨2000") return p >= 500 && p <= 2000;
+        if (range === "₨2000 - ₨5000") return p >= 2000 && p <= 5000;
+        if (range === "Above ₨5000") return p > 5000;
         return false;
       });
       if (!match) return false;
     }
-
-    // Color
-    const colors = selectedFilters["Color"] || [];
-    if (colors.length && !colors.some(c => product.color?.toLowerCase() === c.toLowerCase())) return false;
-
-    // Size
-    const sizes = selectedFilters["Size"] || [];
-    if (sizes.length && !sizes.some(s => product.sizes?.includes(s) || product.size?.toLowerCase() === s.toLowerCase())) return false;
 
     return true;
   });
@@ -163,17 +151,11 @@ function Products() {
           )}
         </button>
 
-        {/* Product Count + Sort */}
+        {/* Product Count */}
         <div className="flex items-center gap-4">
           <span className="text-xs text-gray-400 uppercase tracking-widest">
             {filteredProducts.length} Products
           </span>
-          <select className="text-xs uppercase tracking-widest border border-gray-200 px-3 py-2 outline-none bg-white">
-            <option>Featured</option>
-            <option>Price: Low to High</option>
-            <option>Price: High to Low</option>
-            <option>Newest</option>
-          </select>
         </div>
 
       </div>
@@ -208,6 +190,7 @@ function Products() {
 
           {/* Sidebar */}
           <div className="w-80 bg-white h-full overflow-y-auto px-6 py-6 shadow-xl animate-in slide-in-from-left duration-300">
+
             {/* Sidebar Header */}
             <div className="flex items-center justify-between mb-4">
               <span className="text-xl font-bold uppercase tracking-widest">Filter</span>
