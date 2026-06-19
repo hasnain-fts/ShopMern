@@ -29,7 +29,12 @@ const productSchema = new mongoose.Schema({
     },
     imageURL: [{
         type: String
-    }]
+    }],
+    // NEW: Dynamic attributes for different product types
+    attributes: {
+        type: mongoose.Schema.Types.Mixed,
+        default: {}
+    }
 }, { timestamps: true });
 
 const Product = mongoose.model('Product', productSchema);

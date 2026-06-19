@@ -8,7 +8,15 @@ const filterSections = [
   { label: "Gender", options: ["men", "women", "kids", "unisex"] },
   { label: "Product Type", options: ["shirts", "pants", "watches", "shoes", "accessories"] },
   { label: "Product Availability", options: ["In Stock", "Out of Stock"] },
-  { label: "Price", options: ["Under ₨500", "₨500 - ₨2000", "₨2000 - ₨5000", "Above ₨5000"] },
+  {
+    label: "Price",
+    options: [
+      { value: "Under ₨500",    display: "Under ₨500" },
+      { value: "₨500 - ₨2000",  display: "₨500 - ₨2,000" },
+      { value: "₨2000 - ₨5000", display: "₨2,000 - ₨5,000" },
+      { value: "Above ₨5000",   display: "Above ₨5,000" },
+    ]
+  },
 ];
 
 function FilterSection({ label, options, selected, onToggle }) {
@@ -28,19 +36,23 @@ function FilterSection({ label, options, selected, onToggle }) {
       </button>
       {open && (
         <div className="mt-3 flex flex-col gap-2">
-          {options.map((opt) => (
-            <label key={opt} className="flex items-center gap-2 cursor-pointer group">
-              <input
-                type="checkbox"
-                checked={selected?.includes(opt) || false}
-                onChange={() => onToggle(label, opt)}
-                className="w-3.5 h-3.5 accent-black cursor-pointer"
-              />
-              <span className="text-xs text-gray-600 group-hover:text-black transition-colors capitalize">
-                {opt}
-              </span>
-            </label>
-          ))}
+          {options.map((opt) => {
+            const value = typeof opt === "object" ? opt.value : opt;
+            const display = typeof opt === "object" ? opt.display : opt;
+            return (
+              <label key={value} className="flex items-center gap-2 cursor-pointer group">
+                <input
+                  type="checkbox"
+                  checked={selected?.includes(value) || false}
+                  onChange={() => onToggle(label, value)}
+                  className="w-3.5 h-3.5 accent-black cursor-pointer"
+                />
+                <span className="text-xs text-gray-600 group-hover:text-black transition-colors capitalize">
+                  {display}
+                </span>
+              </label>
+            );
+          })}
         </div>
       )}
     </div>
@@ -82,6 +94,13 @@ function Products() {
     setSelectedFilters({});
   }
 
+  // Helper to get display label for a price value
+  function getPriceDisplay(value) {
+    const priceSection = filterSections.find((s) => s.label === "Price");
+    const match = priceSection?.options.find((o) => o.value === value);
+    return match ? match.display : value;
+  }
+
   const activeFilterCount = Object.values(selectedFilters).flat().length;
 
   const filteredProducts = products.filter((product) => {
@@ -99,15 +118,15 @@ function Products() {
     if (avail.includes("In Stock") && !avail.includes("Out of Stock") && product.stock <= 0) return false;
     if (avail.includes("Out of Stock") && !avail.includes("In Stock") && product.stock > 0) return false;
 
-    // Price — based on price field
+    // Price — value keys have no commas, logic matches correctly
     const prices = selectedFilters["Price"] || [];
     if (prices.length) {
       const p = product.price;
       const match = prices.some((range) => {
-        if (range === "Under ₨500") return p < 500;
-        if (range === "₨500 - ₨2000") return p >= 500 && p <= 2000;
+        if (range === "Under ₨500")    return p < 500;
+        if (range === "₨500 - ₨2000")  return p >= 500 && p <= 2000;
         if (range === "₨2000 - ₨5000") return p >= 2000 && p <= 5000;
-        if (range === "Above ₨5000") return p > 5000;
+        if (range === "Above ₨5000")   return p > 5000;
         return false;
       });
       if (!match) return false;
@@ -160,7 +179,7 @@ function Products() {
 
       </div>
 
-      {/* ── Active Filter Tags ── */}
+      {/* ── Active Filter Tags — show display labels with commas ── */}
       {activeFilterCount > 0 && (
         <div className="max-w-7xl mx-auto px-6 py-3 flex flex-wrap gap-2 items-center">
           {Object.entries(selectedFilters).map(([category, options]) =>
@@ -170,7 +189,7 @@ function Products() {
                 onClick={() => handleToggleFilter(category, opt)}
                 className="flex items-center gap-1 border border-gray-300 px-3 py-1 text-xs uppercase tracking-widest hover:bg-gray-100 transition-colors"
               >
-                {opt}
+                {category === "Price" ? getPriceDisplay(opt) : opt}
                 <X size={10} />
               </button>
             ))

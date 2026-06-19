@@ -2,21 +2,31 @@ const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 dotenv.config({ path: '../.env' });
-const cores = require('cors');
+const cors = require('cors');
 const productRoutes = require('./routes/productRoutes');
 const userRoutes = require('./routes/UserRoutes'); 
-const cartRoutes = require('./routes/cartRoutes');  // ← renamed to cartRoutes
+const cartRoutes = require('./routes/cartRoutes');
+const orderRoutes = require('./routes/orderRoutes');  // ← ADDED order routes
+const paymentRoutes = require('./routes/payment');
 
 const app = express();
 
 dotenv.config();
 
 app.use(express.json());
-app.use(cores());
+app.use(cors());
 
+// Routes
 app.use('/api/products', productRoutes); 
 app.use('/api/users', userRoutes);
-app.use('/api/cart', cartRoutes);  // ✅ now matches
+app.use('/api/cart', cartRoutes);
+app.use('/api/orders', orderRoutes);  // ← ADDED orders endpoint
+app.use('/api/payment', paymentRoutes);
+
+// Health check endpoint
+app.get('/api/health', (req, res) => {
+    res.json({ status: 'OK', message: 'Server is running' });
+});
 
 mongoose.connect(process.env.MONGO_URI)
 .then(() => {

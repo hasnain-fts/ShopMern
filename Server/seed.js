@@ -1133,30 +1133,7 @@ const products = [
         ]
     },
     // ==================== WATCHES ====================
-    {
-        "name": "Civian",
-        "description": "Mens stainless steel",
-        "price": 15000,
-        "gender": "men",
-        "category": "watches",
-        "stock": 8,
-        "imageURL": [
-          "https://cdn.shopify.com/s/files/1/0003/58",
-          "https://cdn.shopify.com/s/files/1/0003/5815/4293/"
-        ]
-    },
-    {
-        "name": "Lotus",
-        "description": "Mens leather",
-        "price": 18450,
-        "gender": "men",
-        "category": "watches",
-        "stock": 6,
-        "imageURL": [
-            "https://cdn.shopify.com/s/files/1/0003/5815/4293/files/SV-11292_Cam002_M17.png?v=1773122392&width=60&height=60&crop=center",
-            "https://pk.lamaretail.com/cdn/shop/files/chronograph-blue-watch-3_720x.jpg?v=1234567895"
-        ]
-    },
+   
     {
     "name": "DAWN 1.0",
     "description": "Women's stainless steel watch with elegant design. Features a stunning chain bracelet and minimalist dial. Available in silver black, rose gold, and black colors.",
