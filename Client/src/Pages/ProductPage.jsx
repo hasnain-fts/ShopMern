@@ -5,12 +5,14 @@ import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { ChevronDown, ChevronLeft, ChevronRight, Minus, Plus, Heart, X } from "lucide-react";
 import { useCart } from "../Context/CartContext";
+import { useWishlist } from "../Context/WishlistContext";
 import { toast } from "sonner";
 import { Toaster } from "@/components/ui/sonner";
 
 function ProductPage() {
   const { id } = useParams();
   const { addToCart } = useCart();
+  const { addToWishlist, removeFromWishlist, isWishlisted, fetchWishlist } = useWishlist();
   const userId = "TEMP_USER_ID";
   
   const [product, setProduct] = useState(null);
@@ -23,8 +25,10 @@ function ProductPage() {
   const [selectedPerfumeSize, setSelectedPerfumeSize] = useState(null);
   const [detailsOpen, setDetailsOpen] = useState(false);
   const [shippingOpen, setShippingOpen] = useState(false);
-  const [wishlisted, setWishlisted] = useState(false);
   const [sizeGuideOpen, setSizeGuideOpen] = useState(false);
+
+  // Check if product is in wishlist
+  const wishlisted = isWishlisted(product?._id);
 
   useEffect(() => {
     window.scrollTo(0, 0);  
@@ -48,6 +52,11 @@ function ProductPage() {
     }
     getProduct();
   }, [id]);
+
+  // Fetch wishlist when component mounts
+  useEffect(() => {
+    fetchWishlist(userId);
+  }, [fetchWishlist, userId]);
 
   const isPerfume = () => {
     const perfumeKeywords = ['NICE', 'ACTUALLY', 'SAFFRON', 'JASMINE', 'BUNGALOW', 'PERFUME', 'NICE, ACTUALLY'];
@@ -113,6 +122,18 @@ function ProductPage() {
     toast.success("Added to cart ✅", {
       description: `${product.name}${variant ? ` · ${variant}` : ""} · Qty: ${quantity}`,
     });
+  };
+
+  const handleWishlistToggle = async () => {
+    if (!product) return;
+    
+    if (isWishlisted(product._id)) {
+      await removeFromWishlist(userId, product._id);
+      toast("Removed from wishlist", { icon: "🤍" });
+    } else {
+      await addToWishlist(userId, product);
+      toast.success("Added to wishlist ❤️");
+    }
   };
 
   const renderAttributeSelector = () => {
@@ -466,8 +487,9 @@ function ProductPage() {
                 : `Add to Cart — Rs ${(getCurrentPrice() * quantity).toLocaleString()}`}
             </button>
 
+            {/* Updated Heart Button with Wishlist */}
             <button
-              onClick={() => setWishlisted(!wishlisted)}
+              onClick={handleWishlistToggle}
               className="w-12 h-12 border border-gray-300 flex items-center justify-center hover:border-black transition-colors cursor-pointer"
             >
               <Heart

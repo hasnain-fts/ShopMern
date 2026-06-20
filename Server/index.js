@@ -6,8 +6,9 @@ const cors = require('cors');
 const productRoutes = require('./routes/productRoutes');
 const userRoutes = require('./routes/UserRoutes'); 
 const cartRoutes = require('./routes/cartRoutes');
-const orderRoutes = require('./routes/orderRoutes');  // ← ADDED order routes
+const orderRoutes = require('./routes/orderRoutes');
 const paymentRoutes = require('./routes/payment');
+const wishlistRoutes = require('./routes/wishlistRoutes');  
 
 const app = express();
 
@@ -20,8 +21,9 @@ app.use(cors());
 app.use('/api/products', productRoutes); 
 app.use('/api/users', userRoutes);
 app.use('/api/cart', cartRoutes);
-app.use('/api/orders', orderRoutes);  // ← ADDED orders endpoint
+app.use('/api/orders', orderRoutes);
 app.use('/api/payment', paymentRoutes);
+app.use('/api/wishlist', wishlistRoutes);  
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
